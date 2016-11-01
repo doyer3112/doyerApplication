@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WifiScaner</string>
+    <string name="action_settings">Data</string>
+    <string name="activity_history">History Data</string>
+</resources>
