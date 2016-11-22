@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="key1"
+        android:summary="点击去设置"
+        android:title="同步设置">
+        <!-- 这个设置页面是android的模板自动生成的  内容不必关心-->
+    </Preference>
+</PreferenceScreen>

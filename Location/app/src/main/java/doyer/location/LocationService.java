@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -21,7 +22,7 @@ import android.util.Log;
 /**
  * Created by jie.du on 16/11/17.
  */
-public class LocationService extends Service {
+public class LocationService extends Service implements LocationListener {
 
 
     private int NOTIFICATION = 0;
@@ -44,47 +45,6 @@ public class LocationService extends Service {
     private static final int LOCATION_INTERVAL = 10 * 1000;
     private static final float LOCATION_DISTANCE = 10f;
 
-    private class LocationListener implements android.location.LocationListener {
-        Location mLastLocation;
-
-        public LocationListener(String provider) {
-            Log.e(TAG, "LocationListener " + provider);
-            mLastLocation = new Location(provider);
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.e(TAG, "onLocationChanged: " + location);
-            mLastLocation.set(location);
-            showLocation(location);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.e(TAG, "onProviderDisabled: " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.e(TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
-        }
-    }
-
-    /*
-    LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER),
-            new LocationListener(LocationManager.NETWORK_PROVIDER)
-    };
-    */
-
-    LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.PASSIVE_PROVIDER), new LocationListener(LocationManager.NETWORK_PROVIDER)
-    };
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -100,17 +60,15 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
-
         Log.e(TAG, "onCreate");
-
         initializeLocationManager();
 
         try {
             mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
+                    LocationManager.PASSIVE_PROVIDER,
                     LOCATION_INTERVAL,
                     LOCATION_DISTANCE,
-                    mLocationListeners[1]
+                    this
             );
         } catch (java.lang.SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
@@ -118,18 +76,6 @@ public class LocationService extends Service {
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
 
-        /*try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    LOCATION_INTERVAL,
-                    LOCATION_DISTANCE,
-                    mLocationListeners[1]
-            );
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
-        }*/
     }
 
     @Override
@@ -137,15 +83,14 @@ public class LocationService extends Service {
         Log.e(TAG, "onDestroy");
         super.onDestroy();
         if (mLocationManager != null) {
-            for (int i = 0; i < mLocationListeners.length; i++) {
-                try {
-                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    mLocationManager.removeUpdates(mLocationListeners[i]);
-                } catch (Exception ex) {
-                    Log.i(TAG, "fail to remove location listener, ignore", ex);
+
+            try {
+                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
                 }
+                mLocationManager.removeUpdates(this);
+            } catch (Exception ex) {
+                Log.i(TAG, "fail to remove location listener, ignore", ex);
             }
         }
     }
@@ -164,10 +109,34 @@ public class LocationService extends Service {
                     return;
                 }
             } else
-                mLocationManager.removeUpdates(mLocationListeners[1]);
+                mLocationManager.removeUpdates(this);
 
             sendNotification("", "纬度：" + location.getLatitude() + "经度： " + location.getLongitude() + "");
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged: ");
+        showLocation(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d(TAG, "onStatusChanged: ");
+        sendNotification("", "onStatusChanged");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d(TAG, "onProviderEnabled: ");
+        sendNotification("", "onProviderEnabled");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d(TAG, "onProviderDisabled: ");
+        sendNotification("", "onProviderDisabled");
     }
 }
 

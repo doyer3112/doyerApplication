@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AccountAuto</string>
+    <string name="account_auth_type">doyer.accountsync</string>
+    <string name="account_auth_provide">doyer.accounto.provider</string>
+    <string name="account_token_type">token</string>
+    <string name="account_name">accounto</string>
+    <string name="account_auth">auth</string>
+</resources>

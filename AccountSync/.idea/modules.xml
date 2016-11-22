@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AccountSync.iml" filepath="$PROJECT_DIR$/AccountSync.iml" />
+      <module fileurl="file://$PROJECT_DIR$/accounto/accounto.iml" filepath="$PROJECT_DIR$/accounto/accounto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hello/hello.iml" filepath="$PROJECT_DIR$/hello/hello.iml" />
+      <module fileurl="file://$PROJECT_DIR$/synclib/synclib.iml" filepath="$PROJECT_DIR$/synclib/synclib.iml" />
+    </modules>
+  </component>
+</project>

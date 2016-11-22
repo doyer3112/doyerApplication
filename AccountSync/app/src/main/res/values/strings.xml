@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AccountSync</string>
+    <string name="account_auth_type">doyer.accountsync</string>
+    <string name="account_auth_provide">doyer.accountsync.provider</string>
+    <string name="account_token_type">token_type</string>
+    <string name="account_name">AccountSync</string>
+</resources>
