@@ -1,0 +1,121 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    tools:context="${relativePackage}.${activityClass}" >
+    
+    <RelativeLayout
+        android:id="@+id/cicle_view"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/base_padding">
+
+        <com.example.qztransit.CircleImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/demo"
+            app:border_width="2dp"
+            app:border_color="@color/dark" />
+
+    </RelativeLayout>
+    
+    
+    
+    <RelativeLayout 
+        android:layout_below="@+id/cicle_view"
+        android:id="@+id/relative"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@color/colorWhite"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/uer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/uername"
+            android:layout_width="80dp"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/username" />
+
+        <EditText
+            android:id="@+id/user_edit"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@+id/uername"
+            android:background="@drawable/shape"
+            android:hint="请输入用户名"
+            android:paddingLeft="10dp" />
+    </RelativeLayout>
+    <ImageView android:layout_height="0.2dp"
+        android:id="@+id/line"
+        android:background="@color/button_material_dark"
+        android:layout_below="@+id/uer_layout"
+        android:layout_width="match_parent"/>
+
+    <RelativeLayout
+        android:layout_below="@+id/line"
+        android:id="@+id/psw_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/password"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:text="@string/password" />
+
+        <EditText
+            android:id="@+id/pwd_edit"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:password="true"
+            android:hint="请输入密码"
+            android:layout_toRightOf="@+id/password"
+            android:background="@drawable/shape"
+            android:paddingLeft="10dp" />
+
+    </RelativeLayout>
+    
+    </RelativeLayout>
+    
+    <RelativeLayout android:layout_height="wrap_content"
+        android:layout_below="@+id/relative"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent">
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/app_login" />
+    <Button
+        android:id="@+id/register_btn"
+        android:layout_toRightOf="@+id/login_btn"
+        android:layout_marginLeft="40dp"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/app_register" />
+    </RelativeLayout>
+
+</RelativeLayout>

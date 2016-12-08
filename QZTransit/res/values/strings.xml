@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QZTransit</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="app_login">登录</string>
+    <string name="app_register">注册</string>
+
+</resources>
