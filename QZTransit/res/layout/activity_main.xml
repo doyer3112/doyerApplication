@@ -60,7 +60,7 @@
     </RelativeLayout>
     <ImageView android:layout_height="0.2dp"
         android:id="@+id/line"
-        android:background="@color/button_material_dark"
+        android:background="@color/colorPrimaryDark"
         android:layout_below="@+id/uer_layout"
         android:layout_width="match_parent"/>
 
