@@ -40,10 +40,10 @@ public class LocationService extends Service implements LocationListener {
         manager.notify(NOTIFICATION++, mBuilder.build());
     }
 
-    private static final String TAG = "MyLocationService";
+    private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 10 * 1000;
-    private static final float LOCATION_DISTANCE = 10f;
+    private static final int LOCATION_INTERVAL = 0 * 1000;
+    private static final float LOCATION_DISTANCE = 0f;
 
 
     @Override
@@ -64,6 +64,7 @@ public class LocationService extends Service implements LocationListener {
         initializeLocationManager();
 
         try {
+            mLocationManager.removeUpdates(this);
             mLocationManager.requestLocationUpdates(
                     LocationManager.PASSIVE_PROVIDER,
                     LOCATION_INTERVAL,
@@ -77,6 +78,7 @@ public class LocationService extends Service implements LocationListener {
         }
 
     }
+
 
     @Override
     public void onDestroy() {

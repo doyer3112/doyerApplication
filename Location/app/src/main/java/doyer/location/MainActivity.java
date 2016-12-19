@@ -28,7 +28,7 @@ import com.cloudnapps.proximity.magic.sync.MainManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private static final int PERMISSION_LOCATION = 101;
     private static final int PERMISSION_LOCATION_TWO = 102;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> providers = new ArrayList<>();
     private Location gpslocation;
     private Location networkLocation;
-    private String TAG = "cloudnapps";
+    private String TAG = "MainActivity";
     private int NOTIFICATION = 0;
     private PendingIntent mLocationPendingIntent;
 
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         locationService();
         MainManager mainManager = new MainManager(this);
         mainManager.setup();
-//        initlocation();
+        initlocation();
 
         getSimInfo();
 
@@ -98,23 +98,21 @@ public class MainActivity extends AppCompatActivity {
 
 //        getLocation();
 
-//        locationProvider = getProvider();
         Location location = locationManager.getLastKnownLocation(locationProvider);
         //监视地理位置变化
 //        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        locationManager.requestLocationUpdates(locationProvider, 10 * 1000, 300, mLocationPendingIntent);
+        locationManager.requestLocationUpdates(locationProvider, 10 * 1000, 300, this);
 
     }
 
     private void setProvider() {
-        /*if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+        if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
             //如果是Network
             locationProvider = LocationManager.NETWORK_PROVIDER;
         } else if (providers.contains(LocationManager.GPS_PROVIDER)) {
             //如果是GPS
             locationProvider = LocationManager.GPS_PROVIDER;
-        } else */
-        if (providers.contains(LocationManager.PASSIVE_PROVIDER)) {
+        } else if (providers.contains(LocationManager.PASSIVE_PROVIDER)) {
             locationProvider = LocationManager.PASSIVE_PROVIDER;
         } else {
             Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
@@ -140,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, this);
                 gpslocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, this);
                 networkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             }
         } catch (IllegalArgumentException e) {
@@ -168,31 +166,6 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    LocationListener locationListener = new LocationListener() {
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle arg2) {
-            Log.d(TAG, "onStatusChanged: ");
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.d(TAG, "onProviderEnabled: ");
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.d(TAG, "onProviderDisabled: ");
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.d(TAG, "onLocationChanged: ");
-            //如果位置发生变化,重新显示
-            showLocation(location);
-
-        }
-    };
 
     private void showLocation(Location location) {
         if (location != null) {
@@ -202,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
             } else
-                locationManager.removeUpdates(locationListener);
+                locationManager.removeUpdates(this);
 
             La.setText(location.getLatitude() + " 纬度");
             Lo.setText(location.getLongitude() + " 经度");
@@ -269,6 +242,53 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locationManager.removeUpdates(mLocationPendingIntent);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        } else
+            locationManager.removeUpdates(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        } else {
+            locationManager.removeUpdates(this);
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, mLocationPendingIntent);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        } else {
+            locationManager.removeUpdates(this);
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged: " + location.getProvider());
+        showLocation(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d(TAG, "onStatusChanged: ");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d(TAG, "onProviderEnabled: ");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d(TAG, "onProviderDisabled: ");
     }
 }

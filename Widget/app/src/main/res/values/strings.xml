@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Widget</string>
+    <string name="app_configure">This is ConfigureAcitvity</string>
+    <string name="app_widget">app widget</string>
+</resources>
